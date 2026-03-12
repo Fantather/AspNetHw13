@@ -10,8 +10,9 @@ namespace AspNetHw13.Controllers
     {
         public async Task<IActionResult> Index([FromQuery] PaginationParameters parameters)
         {
-            UserIndexViewModel viewModel = new(await repository.GetPageAsync(parameters), parameters);
-            return View(viewModel);
+            PaginatedList<ApplicationUser> userList = await repository.GetPageAsync(parameters);
+            PaginatedList<UserViewModel> userViewModelList = userList.Select(user => new UserViewModel(user.UserName, user.Email));
+            return View(new UserIndexViewModel(userViewModelList, parameters));
         }
     }
 }

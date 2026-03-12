@@ -8,7 +8,7 @@ namespace AspNetHw13.Repositories
 {
     public class UserRepository(UserManager<ApplicationUser> userManager)
     {
-        public async Task<PaginatedList<UserViewModel>> GetPageAsync(PaginationParameters parameters)
+        public async Task<PaginatedList<ApplicationUser>> GetPageAsync(PaginationParameters parameters)
         {
             var queryable = userManager.Users;
             if(!string.IsNullOrWhiteSpace(parameters.Query))
@@ -16,10 +16,8 @@ namespace AspNetHw13.Repositories
                 queryable = queryable.Where(user => user.UserName.Contains(parameters.Query));
             }
 
-            var list = await PaginatedList<ApplicationUser>
+            return await PaginatedList<ApplicationUser>
                     .CreateAsync(queryable, parameters);
-
-            return list.Select(user => new UserViewModel(user.UserName, user.Email));
         }
     }
 }
