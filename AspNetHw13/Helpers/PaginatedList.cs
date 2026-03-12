@@ -10,6 +10,11 @@ namespace AspNetHw13.Helpers
         public int PageSize { get; private set; }
         public int TotalPages { get; private set; }
         public int TotalCount { get; private set; }
+        public string? CurrentQuery { get; private set; }
+
+
+        public bool HasPreviousPage => PageIndex > 1;
+        public bool HasNextPage => PageIndex < TotalPages;
 
 
         public PaginatedList(IEnumerable<T> items, int count, PaginationParameters parameters)
@@ -19,15 +24,19 @@ namespace AspNetHw13.Helpers
             TotalCount = count;
             TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
 
+            CurrentQuery = parameters.Query;
+
             this.AddRange(items);
         }
 
-        private PaginatedList(IEnumerable<T> items, int totalCount, int pageIndex, int pageSize)
+        private PaginatedList(IEnumerable<T> items, int totalCount, int pageIndex, int pageSize, string? currentQuery)
         {
             PageIndex = pageIndex;
             PageSize = pageSize;
             TotalCount = totalCount;
             TotalPages = (int)Math.Ceiling(TotalCount/(double)PageSize);
+
+            CurrentQuery = currentQuery;
 
             this.AddRange(items);
         }
@@ -49,7 +58,7 @@ namespace AspNetHw13.Helpers
         {
             IEnumerable<TResult> mappedItems = ((IEnumerable<T>)this).Select(selector);
 
-            return new PaginatedList<TResult>(mappedItems, TotalCount, PageIndex, PageSize);
+            return new PaginatedList<TResult>(mappedItems, TotalCount, PageIndex, PageSize, CurrentQuery);
         }
     }
 }

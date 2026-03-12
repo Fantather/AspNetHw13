@@ -1,0 +1,59 @@
+﻿@model UserIndexViewModel
+
+<h2>Список пользователей</h2>
+
+<form asp-action="Index" method="get" class="mb-4">
+    <div class="input-group">
+        <input type="text"
+               name="Query"
+               value="@ViewData[Model.Parameters.Query]"
+               class="form-control"
+               placeholder="Поиск по имени" />
+               
+        <button type="submit" class="btn btn-primary">Искать</button>
+        <a asp-action="Index" class="btn btn-secondary">Сбросить</a>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Имя пользователя</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    @{
+        var prevDisabled = !Model.Users.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Users.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="Index"
+           asp-route-pageIndex="@(Model.Users.PageIndex - 1)"
+           asp-route-query="@ViewData["CurrentQuery"]"
+           class="btn btn-outline-primary @prevDisabled">
+        Назад
+    </a>
+
+    <span class="mx-3">
+        Страница @Model.Users.PageIndex из @Model.Users.TotalPages
+    </span>
+
+    <a asp-action="Index"
+           asp-route-pageIndex="@(Model.Users.PageIndex + 1)"
+           asp-route-query="@ViewData["CurrentQuery"]"
+           class="btn btn-outline-primary @nextDisabled">
+        Вперед
+    </a>
+</div>

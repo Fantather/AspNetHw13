@@ -13,6 +13,6 @@
 
 
         public int PageIndex { get; init; } = 1;
-        public string Query { get; init; } = string.Empty;
+        public string? Query { get; init; }
     }
 }
